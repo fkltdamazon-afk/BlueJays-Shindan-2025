@@ -1,0 +1,575 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>あなたはどの選手タイプ？ブルージェイズ診断2025</title>
+<style>
+:root{
+  --bg:#070b14;
+  --card:rgba(255,255,255,.06);
+  --card2:rgba(255,255,255,.10);
+  --text:rgba(255,255,255,.92);
+  --muted:rgba(255,255,255,.68);
+  --line:rgba(255,255,255,.14);
+  --blue:#2b6cff;
+  --blue2:#3fe2ff;
+  --shadow:0 18px 40px rgba(0,0,0,.45);
+}
+*{ box-sizing:border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    "Hiragino Kaku Gothic ProN","Noto Sans JP", Meiryo, Arial, sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 800px at 15% 5%, rgba(43,108,255,.35), transparent 60%),
+    radial-gradient(900px 600px at 90% 15%, rgba(63,226,255,.22), transparent 60%),
+    radial-gradient(800px 500px at 55% 95%, rgba(77,240,138,.10), transparent 55%),
+    var(--bg);
+}
+.wrap{
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 28px 18px 40px;
+}
+.hero{ padding: 10px 6px 18px; }
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+h1{
+  margin: 14px 0 8px;
+  font-size: clamp(26px, 4vw, 40px);
+  line-height: 1.15;
+}
+.sub{
+  margin:0;
+  color: var(--muted);
+  line-height: 1.7;
+  max-width: 68ch;
+}
+.card{
+  margin-top: 18px;
+  background: linear-gradient(180deg, var(--card), rgba(255,255,255,.03));
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(255,255,255,.03);
+}
+.progress{
+  position: relative;
+  flex: 1;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  overflow: hidden;
+}
+.bar{
+  position:absolute;
+  left:0; top:0;
+  height:100%;
+  width:0%;
+  background: linear-gradient(90deg, var(--blue), var(--blue2));
+  border-radius: 999px;
+  transition: width .25s ease;
+}
+.step{
+  font-size: 13px;
+  color: var(--muted);
+  min-width: 72px;
+  text-align: right;
+}
+.question-area{ padding: 18px 16px 10px; }
+.qtitle{ font-size: 18px; margin: 0 0 12px; line-height: 1.5; }
+.choices{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.choice{
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  border-radius: 16px;
+  padding: 12px 12px;
+  cursor:pointer;
+  display:flex;
+  gap: 10px;
+  align-items:flex-start;
+  transition: transform .08s ease, background .18s ease, border-color .18s ease;
+}
+.choice:hover{ transform: translateY(-1px); background: rgba(255,255,255,.07); }
+.choice input{ margin-top: 2px; }
+.choice .label{ display:block; color: var(--text); line-height: 1.6; }
+.choice.selected{
+  border-color: rgba(63,226,255,.55);
+  background: rgba(63,226,255,.10);
+}
+.nav{
+  display:flex;
+  gap: 10px;
+  padding: 14px 16px 16px;
+  border-top: 1px solid var(--line);
+  justify-content: flex-end;
+  background: rgba(255,255,255,.02);
+}
+.btn{
+  appearance:none;
+  border: 1px solid rgba(255,255,255,.18);
+  background: linear-gradient(180deg, rgba(43,108,255,.92), rgba(43,108,255,.65));
+  color: white;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-weight: 700;
+  cursor:pointer;
+  transition: transform .08s ease, opacity .12s ease, filter .12s ease;
+}
+.btn:hover{ transform: translateY(-1px); filter: brightness(1.06); }
+.btn:disabled{ opacity:.45; cursor:not-allowed; transform:none; }
+.btn.ghost{
+  background: transparent;
+  border-color: rgba(255,255,255,.20);
+  color: var(--text);
+}
+.hidden{ display:none; }
+.result{ padding: 16px; }
+.result-head{
+  display:grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  align-items: start;
+}
+@media (min-width: 760px){
+  .result-head{
+    grid-template-columns: 1.3fr .7fr;
+    gap: 18px;
+  }
+}
+.kicker{
+  color: var(--muted);
+  letter-spacing: .12em;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+.result h2{
+  margin: 6px 0 6px;
+  font-size: 24px;
+  line-height: 1.25;
+}
+.meta{
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.photo{
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  border-radius: 18px;
+  overflow:hidden;
+}
+.photo img{
+  width: 100%;
+  height: auto;
+  display:block;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+}
+.result-text{
+  margin: 14px 0 0;
+  color: var(--text);
+  line-height: 1.9;
+  font-size: 15px;
+  white-space: pre-wrap;
+}
+.actions{
+  display:flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 16px;
+}
+.note{
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+.foot{
+  margin-top: 18px;
+  color: rgba(255,255,255,.55);
+  text-align:center;
+}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <div class="badge">Blue Jays Diagnosis 2025</div>
+    <h1>あなたはどの選手タイプ？<br>ブルージェイズ診断2025</h1>
+    <p class="sub">10個の設問に答えるだけ。最後に選手タイプと鑑定結果、そして写真が表示されます。</p>
+  </header>
+
+  <section class="card" id="app">
+    <div class="topbar">
+      <div class="progress"><div class="bar" id="bar"></div></div>
+      <div class="step" id="stepText">Q1 / 10</div>
+    </div>
+
+    <div id="questionArea" class="question-area"></div>
+
+    <div class="nav">
+      <button class="btn ghost" id="backBtn" type="button">戻る</button>
+      <button class="btn" id="nextBtn" type="button" disabled>次へ</button>
+    </div>
+  </section>
+
+  <section class="card result hidden" id="resultCard" aria-live="polite">
+    <div class="result-head">
+      <div>
+        <div class="kicker">診断結果</div>
+        <h2 id="resultTitle">あなたは〇〇選手タイプです</h2>
+        <div class="meta" id="resultMeta"></div>
+      </div>
+      <div class="photo" id="photoBox">
+        <img id="playerImg" alt="選手写真" loading="lazy" />
+      </div>
+    </div>
+
+    <p class="result-text" id="resultText"></p>
+
+    <div class="actions">
+      <button class="btn" id="retryBtn" type="button">もう一度診断する</button>
+      <button class="btn ghost" id="copyBtn" type="button">結果をコピー</button>
+    </div>
+
+    <p class="note">画像はMLB公式のヘッドショットURL形式を利用して表示します。環境によっては表示制限がかかる場合があります。</p>
+  </section>
+
+  <footer class="foot">
+    <small>Unofficial fan app. Not affiliated with MLB or Toronto Blue Jays.</small>
+  </footer>
+</main>
+
+<script>
+// MLB公式ヘッドショット形式 (player id を差し込み)
+function headshotUrl(mlbamId){
+  return "https://img.mlbstatic.com/mlb-photos/image/upload/d_people:generic:headshot:67:current.png/w_640,q_auto:best/v1/people/" + mlbamId + "/headshot/silo/current.png";
+}
+
+// 10タイプ (選手名とIDは例)
+const PLAYER_TYPES = [
+  { key:"BICHETTE", name:"ボー・ビシェット", role:"攻めの瞬発型リーダー", id:666182,
+    result:
+"あなたはボー・ビシェット選手タイプです。\n" +
+"直感で勝ち筋を見つけて、迷いなく踏み込める人。空気を読みすぎて止まるより、まず一歩を出して流れを作ります。周囲から見ると大胆でも、内側は繊細で、静かに努力を積み上げている。\n\n" +
+"強みは勝負どころの集中力と、攻撃のスイッチを入れる速さ。反面、周りのペースが遅いと消耗しやすいので、待つ時間は準備に変えると整います。\n\n" +
+"今日の開運アクションは、予定を1つだけ前倒しで片付けること。勢いはあなたの武器。先に動いた分だけ、味方が増えます。"
+  },
+  { key:"VLAD", name:"ブラディミール・ゲレーロJr", role:"芯が太い安定の主砲型", id:665489,
+    result:
+"あなたはゲレーロJr選手タイプです。\n" +
+"場を背負う覚悟があり、ここぞで逃げない人。普段は朗らかでも、肝心な局面では腹が据わっていて、周囲が不安な時ほど落ち着いている。あなたの存在はチームにとっての重心です。\n\n" +
+"強みは継続力と、プレッシャーを栄養に変える力。反面、抱え込みすぎると反動が出やすい。頼るのは弱さではなく戦略です。\n\n" +
+"今日の開運アクションは、誰か1人にだけ本音を短く伝えること。背負う人ほど、言葉を外に出すだけで運が回り始めます。"
+  },
+  { key:"SPRINGER", name:"ジョージ・スプリンガー", role:"明るさで流れを変えるムードメーカー型", id:543807,
+    result:
+"あなたはジョージ・スプリンガー選手タイプです。\n" +
+"人の緊張をほどく明るさを持ち、停滞した空気を一瞬で変えられる人。自分が前に出るだけでなく、周囲の良さを引き出すのが上手い。気配りが自然にできるので、気付けば中心にいます。\n\n" +
+"強みは切り替えの速さと、勝負を楽しむ胆力。反面、周りを優先しすぎると疲れに気付きにくい。笑顔の裏で休息も設計すると運気が安定します。\n\n" +
+"今日の開運アクションは、やらないことを1つ決めること。余白が生まれると、あなたの軽やかさが最大化されます。"
+  },
+  { key:"VARSHO", name:"ドールトン・バーショ", role:"献身と守備職人の万能型", id:662139,
+    result:
+"あなたはドールトン・バーショ選手タイプです。\n" +
+"表に出るより、勝つために必要な仕事を淡々と積み上げる人。派手さより実用を選び、誰も見ていないところで差を作ります。責任感が強く、任されたら最後までやり切る。\n\n" +
+"強みは安定した遂行力と、状況判断の正確さ。反面、完璧を狙いすぎると自分に厳しくなりすぎる。7割で出して残りは改善で埋める発想があなたを救います。\n\n" +
+"今日の開運アクションは、机や部屋の一角だけ整えること。足元が整うと集中力が一段上がります。"
+  },
+  { key:"KIRK", name:"アレハンドロ・カーク", role:"頭脳派の司令塔型", id:672386,
+    result:
+"あなたはアレハンドロ・カーク選手タイプです。\n" +
+"感情より観察を優先できる人。相手の癖や流れを読み、先回りして最善を選びます。派手なアピールはしないのに、気付く人には一目置かれる。あなたの強みは静かな支配力です。\n\n" +
+"強みは分析力と、状況を落ち着かせる言葉選び。反面、考えすぎて決断が遅れる時があるので、時間制限を自分に設定すると勝ちやすい。\n\n" +
+"今日の開運アクションは、決める基準を1行で書くこと。基準が明確になると迷いが消えて判断が鋭くなります。"
+  },
+  { key:"GIMENEZ", name:"アンドレス・ヒメネス", role:"堅実で粘る職人型", id:665926,
+    result:
+"あなたはアンドレス・ヒメネス選手タイプです。\n" +
+"目立たないところで勝率を上げる人。堅実さが武器で、派手な一発よりもミスを減らし、毎日の積み重ねで信頼を取りにいきます。あなたがいるだけで全体の精度が上がる。\n\n" +
+"強みは守りの強さと、状況に合わせた微調整。反面、自己評価が低くなりがちなので、自分の貢献をメモで見える化すると運が伸びます。\n\n" +
+"今日の開運アクションは、やったことを3つ書き出すこと。小さな積み重ねを自覚した瞬間、自信は本物になります。"
+  },
+  { key:"SANTANDER", name:"アンソニー・サンタンダー", role:"勝負強さで刺すクラッチ型", id:623993,
+    result:
+"あなたはアンソニー・サンタンダー選手タイプです。\n" +
+"普段はクールでも、ここぞの一撃で流れを変える人。勝負の場面で怖がらずに振り切れる胆力があり、周囲が縮こまるほど集中が研ぎ澄まされます。\n\n" +
+"強みは強気の決断と、空気を破る行動力。反面、調子が悪い時に黙り込みやすいので、状態が落ちたら早めにリズムを変える工夫が必要です。\n\n" +
+"今日の開運アクションは、短い散歩か軽い運動。体を動かすと心が先に前を向き、結果が後から追いついてきます。"
+  },
+  { key:"SCHNEIDER", name:"デービス・シュナイダー", role:"反骨と工夫で伸びる成長型", id:676914,
+    result:
+"あなたはデービス・シュナイダー選手タイプです。\n" +
+"最初から天才扱いされなくても、工夫と改善で勝ち上がる人。周りの評価より、昨日の自分を超えることに燃えます。地味な努力を続けられるので、気付いたら強くなっている。\n\n" +
+"強みは学習スピードと、失敗からの修正力。反面、周囲の期待を背負いすぎると軸がぶれやすい。比較対象は常に過去の自分だけにすると安定します。\n\n" +
+"今日の開運アクションは、やり方を1つ変えること。工夫が入った瞬間に伸び方が変わります。"
+  },
+  { key:"GAUSMAN", name:"ケビン・ガウスマン", role:"静かに制圧する職人投手型", id:592332,
+    result:
+"あなたはケビン・ガウスマン選手タイプです。\n" +
+"派手に騒がず、淡々と勝ちを作れる人。感情を波立たせるより、準備と手順で結果を取りにいきます。安定感があり、周囲はあなたの存在で落ち着く。\n\n" +
+"強みは再現性と、崩れた時の立て直しの速さ。反面、同じ型にこだわりすぎると伸びが止まるので、時々新しい刺激を入れると運が上がります。\n\n" +
+"今日の開運アクションは、道具や環境を1つアップデートすること。小さな変化が大きな成果につながるタイプです。"
+  },
+  { key:"BERRIOS", name:"ホセ・ベリオス", role:"情熱と安定を両立するエース気質型", id:621244,
+    result:
+"あなたはホセ・ベリオス選手タイプです。\n" +
+"熱さと冷静さを使い分けられる人。気合いだけで突っ込まず、必要な時だけギアを上げて勝負します。責任感が強く、任された役割は必ず守る。\n\n" +
+"強みは継続力と、波を小さくする自己管理。反面、気持ちが入りすぎると力みが出るので、ルーティンで平常心を作ると強い。\n\n" +
+"今日の開運アクションは、開始前に深呼吸を3回。準備で整えた人から勝ちが寄ってきます。"
+  }
+];
+
+// 10問。各選択肢がどのタイプに加点するか
+const QUESTIONS = [
+  { text:"Q1. 初対面の場でのあなたは？", choices:[
+    { text:"まず自分から話題を出して場を回す", adds:["SPRINGER","BICHETTE"] },
+    { text:"周りを観察して必要なところだけ入る", adds:["KIRK","GAUSMAN"] },
+    { text:"空気が固いなら自分が動いて崩す", adds:["SANTANDER","BICHETTE"] },
+    { text:"目立たず仕事を拾って信頼を取る", adds:["VARSHO","GIMENEZ"] }
+  ]},
+  { text:"Q2. 仕事や学習で一番強いスタイルは？", choices:[
+    { text:"改善点を見つけて試行錯誤で伸ばす", adds:["SCHNEIDER","KIRK"] },
+    { text:"型を作って安定した成果を出す", adds:["GAUSMAN","GIMENEZ"] },
+    { text:"勝負どころだけ一気に踏み込む", adds:["SANTANDER","BICHETTE"] },
+    { text:"裏方でも確実に積み上げる", adds:["VARSHO","VLAD"] }
+  ]},
+  { text:"Q3. トラブルが起きた時の反応は？", choices:[
+    { text:"落ち着いて手順化して収束させる", adds:["GAUSMAN","KIRK"] },
+    { text:"責任を引き受けて前に出る", adds:["VLAD","BERRIOS"] },
+    { text:"空気を変える一手を打つ", adds:["SPRINGER","SANTANDER"] },
+    { text:"小さな火種を先に潰して被害を減らす", adds:["VARSHO","GIMENEZ"] }
+  ]},
+  { text:"Q4. あなたのモチベーション源は？", choices:[
+    { text:"結果で黙らせる感覚が好き", adds:["SANTANDER","VLAD"] },
+    { text:"昨日の自分より上手くなること", adds:["SCHNEIDER","GAUSMAN"] },
+    { text:"仲間が笑ってる空気が一番", adds:["SPRINGER","VARSHO"] },
+    { text:"勝負の緊張感とスピード感", adds:["BICHETTE","BERRIOS"] }
+  ]},
+  { text:"Q5. 友人からよく言われるのは？", choices:[
+    { text:"頼れるしブレない", adds:["VLAD","GAUSMAN"] },
+    { text:"頭の回転が速い", adds:["KIRK","BICHETTE"] },
+    { text:"気配りが自然", adds:["VARSHO","SPRINGER"] },
+    { text:"勝負強い", adds:["SANTANDER","BERRIOS"] }
+  ]},
+  { text:"Q6. あなたの弱点に近いのは？", choices:[
+    { text:"考えすぎて決断が遅れる", adds:["KIRK","GIMENEZ"] },
+    { text:"背負いすぎて疲れが溜まる", adds:["VLAD","SPRINGER"] },
+    { text:"勢いで突っ込んで後で調整", adds:["BICHETTE","SANTANDER"] },
+    { text:"完璧を狙って自分に厳しい", adds:["VARSHO","SCHNEIDER"] }
+  ]},
+  { text:"Q7. チームにいるならどの役が向いてる？", choices:[
+    { text:"主役として引っ張る", adds:["VLAD","BICHETTE"] },
+    { text:"司令塔として全体を整える", adds:["KIRK","GAUSMAN"] },
+    { text:"ムードと勢いを作る", adds:["SPRINGER","SANTANDER"] },
+    { text:"穴を埋めて勝率を上げる", adds:["VARSHO","GIMENEZ"] }
+  ]},
+  { text:"Q8. 勝負前にやると効くのは？", choices:[
+    { text:"ルーティンで心を整える", adds:["BERRIOS","GAUSMAN"] },
+    { text:"相手を観察して作戦を決める", adds:["KIRK","GIMENEZ"] },
+    { text:"とにかく先に動いて流れを作る", adds:["BICHETTE","SPRINGER"] },
+    { text:"静かに燃えて一撃に集中する", adds:["SANTANDER","VLAD"] }
+  ]},
+  { text:"Q9. 人生で大事にしているのは？", choices:[
+    { text:"信頼。約束を守る", adds:["VLAD","BERRIOS"] },
+    { text:"成長。昨日より上へ", adds:["SCHNEIDER","BICHETTE"] },
+    { text:"バランス。継続できる形", adds:["GAUSMAN","VARSHO"] },
+    { text:"精度。小さな差を詰める", adds:["GIMENEZ","KIRK"] }
+  ]},
+  { text:"Q10. 最後に。理想の勝ち方は？", choices:[
+    { text:"決定的な一撃で決める", adds:["VLAD","SANTANDER"] },
+    { text:"ミスなく積み上げて完勝", adds:["GAUSMAN","GIMENEZ"] },
+    { text:"勢いを連鎖させて圧倒", adds:["SPRINGER","BICHETTE"] },
+    { text:"見えない仕事で勝ちを呼ぶ", adds:["VARSHO","KIRK"] }
+  ]}
+];
+
+const app = document.getElementById("app");
+const questionArea = document.getElementById("questionArea");
+const bar = document.getElementById("bar");
+const stepText = document.getElementById("stepText");
+const backBtn = document.getElementById("backBtn");
+const nextBtn = document.getElementById("nextBtn");
+
+const resultCard = document.getElementById("resultCard");
+const resultTitle = document.getElementById("resultTitle");
+const resultText = document.getElementById("resultText");
+const resultMeta = document.getElementById("resultMeta");
+const photoBox = document.getElementById("photoBox");
+const retryBtn = document.getElementById("retryBtn");
+const copyBtn = document.getElementById("copyBtn");
+
+let current = 0;
+let answers = Array(QUESTIONS.length).fill(null);
+let scores = Object.fromEntries(PLAYER_TYPES.map(p => [p.key, 0]));
+
+function resetScores(){
+  scores = Object.fromEntries(PLAYER_TYPES.map(p => [p.key, 0]));
+}
+function recomputeScores(){
+  resetScores();
+  answers.forEach((choiceIndex, qi) => {
+    if (choiceIndex === null) return;
+    const adds = QUESTIONS[qi].choices[choiceIndex].adds;
+    adds.forEach(k => scores[k] = (scores[k] || 0) + 1);
+  });
+}
+
+function render(){
+  const q = QUESTIONS[current];
+  stepText.textContent = "Q" + (current + 1) + " / " + QUESTIONS.length;
+
+  const picked = answers[current];
+
+  questionArea.innerHTML =
+    '<h3 class="qtitle">' + q.text + '</h3>' +
+    '<div class="choices" role="radiogroup" aria-label="choices">' +
+      q.choices.map((c, i) => (
+        '<label class="choice ' + (picked === i ? "selected" : "") + '">' +
+          '<input type="radio" name="q" value="' + i + '" ' + (picked === i ? "checked" : "") + ' />' +
+          '<span class="label">' + c.text + '</span>' +
+        '</label>'
+      )).join("") +
+    '</div>';
+
+  backBtn.disabled = current === 0;
+  nextBtn.disabled = (answers[current] === null);
+  nextBtn.textContent = (current === QUESTIONS.length - 1) ? "結果を見る" : "次へ";
+
+  const labels = questionArea.querySelectorAll(".choice");
+  labels.forEach((label, i) => {
+    label.addEventListener("click", () => {
+      answers[current] = i;
+      labels.forEach(l => l.classList.remove("selected"));
+      label.classList.add("selected");
+      const input = label.querySelector("input");
+      if (input) input.checked = true;
+      nextBtn.disabled = false;
+      updateBar();
+    });
+  });
+
+  updateBar();
+}
+
+function updateBar(){
+  const answeredCount = answers.filter(a => a !== null).length;
+  const p = (answeredCount / QUESTIONS.length) * 100;
+  const p2 = ((current) / QUESTIONS.length) * 100;
+  bar.style.width = Math.max(p2, p * 0.92) + "%";
+}
+
+function decideWinner(){
+  recomputeScores();
+
+  let max = -Infinity;
+  let top = [];
+  for (const k in scores){
+    const v = scores[k];
+    if (v > max){
+      max = v;
+      top = [k];
+    } else if (v === max){
+      top.push(k);
+    }
+  }
+  const winnerKey = top[Math.floor(Math.random() * top.length)];
+  return PLAYER_TYPES.find(p => p.key === winnerKey);
+}
+
+function showResult(){
+  const winner = decideWinner();
+
+  app.classList.add("hidden");
+  resultCard.classList.remove("hidden");
+
+  resultTitle.textContent = "あなたは" + winner.name + "選手タイプです";
+  resultMeta.textContent = "タイプ傾向: " + winner.role + " / 設問: " + QUESTIONS.length + "問";
+  resultText.textContent = winner.result;
+
+  // 画像枠を初期化
+  photoBox.innerHTML = '<img id="playerImg" alt="選手写真" loading="lazy" />';
+  const img = document.getElementById("playerImg");
+  img.src = headshotUrl(winner.id);
+  img.alt = winner.name + " の写真";
+
+  img.onerror = () => {
+    photoBox.innerHTML =
+      '<div style="padding:14px; color: rgba(255,255,255,.72); line-height:1.6;">' +
+      '画像を読み込めませんでした。<br>' +
+      'ネットワークやサイト側の制限で表示できない場合があります。' +
+      '</div>';
+  };
+}
+
+backBtn.addEventListener("click", () => {
+  if (current > 0){
+    current -= 1;
+    render();
+  }
+});
+
+nextBtn.addEventListener("click", () => {
+  if (answers[current] === null) return;
+
+  if (current === QUESTIONS.length - 1){
+    showResult();
+  } else {
+    current += 1;
+    render();
+  }
+});
+
+retryBtn.addEventListener("click", () => {
+  current = 0;
+  answers = Array(QUESTIONS.length).fill(null);
+  resetScores();
+  resultCard.classList.add("hidden");
+  app.classList.remove("hidden");
+  render();
+});
+
+copyBtn.addEventListener("click", async () => {
+  const text = resultTitle.textContent + "\n\n" + resultText.textContent;
+  try{
+    await navigator.clipboard.writeText(text);
+    copyBtn.textContent = "コピーしました";
+    setTimeout(() => copyBtn.textContent = "結果をコピー", 1400);
+  }catch(e){
+    alert("コピーに失敗しました。ブラウザの権限設定をご確認ください。");
+  }
+});
+
+// 初期描画
+render();
+</script>
+</body>
+</html>
